@@ -13,7 +13,7 @@ class ScheduleClassController extends Controller
      */
     public function index()
     {
-        $scheduleClasses = auth()->user()->scheduleClasses()->where('date_time', '>', now())->oldest('date_time')->get();
+        $scheduleClasses = auth()->user()->scheduleClasses()->upcoming()->oldest('date_time')->get();
         return view('instructor.upcoming')->with('scheduleClasses', $scheduleClasses);
     }
 
@@ -45,6 +45,7 @@ class ScheduleClassController extends Controller
         ]);
 
         ScheduleClass::create($validated);
+        return redirect()->route('schedule.index');
     }
 
     /**

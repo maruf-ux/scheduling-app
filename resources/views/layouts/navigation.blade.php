@@ -32,6 +32,22 @@
                     </div>
                 </div>
             @endcan
+            @can('book-class')
+            <!-- Navigation Links -->
+            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <x-nav-link :href="route('booking.create')" :active="request()->routeIs('booking.create')">
+                    Book a Class
+                </x-nav-link>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <x-nav-link :href="route('booking.index')" :active="request()->routeIs('booking.index')">
+                    Upcoming Classes
+                </x-nav-link>
+            </div>
+        </div>
+    @endcan
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">

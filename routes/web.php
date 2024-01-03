@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScheduleClassController;
@@ -12,17 +13,41 @@ Route::get('/', function () {
 
 Route::get('/dashboard', DashboardController::class)->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/instructor/dashboard', function () {
-    return view('instructor.dashboard');
-})->middleware(['auth', 'role:instructor'])->name('instructor.dashboard');
+/*
+ *   Instructor all Route
+ */
 
-Route::resource('/instructor/schedule',ScheduleClassController::class)
-->only('index','create','store','destroy')
-->middleware(['auth', 'role:instructor']);
+Route::middleware(['auth', 'role:instructor'])->group(function () {
+    Route::get('/instructor/dashboard', function () {
+        return view('instructor.dashboard');
+    })->name('instructor.dashboard');
 
-Route::get('/member/dashboard', function () {
-    return view('member.dashboard');
-})->middleware(['auth', 'role:member'])->name('member.dashboard');
+    Route::resource('/instructor/schedule', ScheduleClassController::class)
+        ->only('index', 'create', 'store', 'destroy');
+});
+
+/*
+ *   Member all Route
+ */
+
+Route::middleware(['auth', 'role:member'])->group(function () {
+    Route::get('/member/dashboard', function () {
+        return view('member.dashboard');
+    })->name('member.dashboard');
+
+    Route::get('/member/book', [BookingController::class, 'create'])
+        ->name('booking.create');
+    Route::post('/member/booking', [BookingController::class, 'store'])
+        ->name('booking.store');
+    Route::get('/member/booking', [BookingController::class, 'index'])
+        ->name('booking.index');
+    Route::delete('/member/booking/{id}', [BookingController::class, 'destroy'])
+        ->name('booking.destroy');
+});
+
+/*
+ *   breezee authentication part
+ */
 
 Route::get('/admin/dashboard', function () {
     return view('admin.dashboard');
